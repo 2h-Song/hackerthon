@@ -25,10 +25,10 @@ export default function Header(){
         setInquiryModalOpen(false);
     }
 
-    const handleOptionClick = (option) => {
-        setSelectedOption(option);
-        closeModal();
-    }
+    // const handleOptionClick = (option) => {
+    //     setSelectedOption(option);
+    //     closeModal();
+    // }
 
     const handleComplete = () => {
         // axios를 통해 서버로 결과값 전달
@@ -81,7 +81,7 @@ export default function Header(){
               <h2 className="text-xl font-semibold mb-4">긴급 상황 신고하기</h2>
               <p>긴급 상황엔 제출만 눌러도 됩니다</p> 
               <a className="text-red-500">허위 신고의 경우 제재나 법적 처벌이 이루어질 수 있습니다.</a>
-              {selectedOption === 'yes' && (
+              {/* {selectedOption === 'yes' && ( */}
                 <div className="mt-4">
                   <textarea
                     rows="4"
@@ -92,10 +92,10 @@ export default function Header(){
                   ></textarea>
                    <div className="flex flex-col md:flex-row md:justify-between">
                       <button onClick={handleComplete} className="block md:w-1/4 mx-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md mb-2 md:mb-0">제출</button>
-                      <button onClick={closeModal} className="block md:w-1/4 mx-auto px-4 py-2 bg-blue-300 hover:bg-blue-500 text-white rounded-md">닫기</button>
+                      <button  onClick={closeModal} className="block md:w-1/4 mx-auto px-4 py-2 bg-blue-300 hover:bg-blue-500 text-white rounded-md">닫기</button>
                     </div>
                 </div>
-              )}
+              {/* // )} */}
             </div>
           </div>
         )}
