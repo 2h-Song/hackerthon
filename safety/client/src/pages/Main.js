@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BrowserRouter, Route, Routes, Switch } from "react-router-dom";
 
-import "../css/main.css"
+import "../css/main.css";
 
-export default function Main(){
-    return (
-        <div>
-            <a>ㅇㅇ</a>
-        </div>
-    )
+export default function Main() {
+  return (
+    <div>
+      <a>ㅇㅇ</a>
+    </div>
+  );
 }

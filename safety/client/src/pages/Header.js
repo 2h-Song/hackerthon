@@ -131,7 +131,6 @@ export default function Header() {
           </div>
         </nav>
       </header>
-
       {isReportModalOpen && (
         <div className="modal fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-75">
           <div className="modal-content bg-white w-11/12 md:w-1/2 lg:w-1/3 p-6 rounded-lg overflow-y-auto">
