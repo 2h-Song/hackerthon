@@ -1,15 +1,26 @@
-import ReactDOM from "react-dom";
-import React from "react";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { BrowserRouter, Route, Routes, Switch } from "react-router-dom";
+import React, { useEffect } from "react";
 
-import "../css/main.css";
+export default function MapComponent() {
+  useEffect(() => {
+    const loadMapScript = () => {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_API_KEY}`;
+      script.onload = () => {
+        // API 로드 완료 후 실행할 코드
+        const container = document.getElementById("map");
+        const options = {
+          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+          level: 3,
+        };
 
-export default function Main() {
-  return (
-    <div>
-      <a>ㅇㅇ</a>
-    </div>
-  );
+        new window.kakao.maps.Map(container, options);
+      };
+      document.head.appendChild(script);
+    };
+
+    loadMapScript();
+  }, []);
+
+  return <div id="map" style={{ width: "500px", height: "400px" }}></div>;
 }
