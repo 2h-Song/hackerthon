@@ -12,10 +12,10 @@ function App() {
     <Router>
       <div className="App">
         <Header />
+        <Footer />
           <Routes>
             <Route path="/" element={<Map/>} />
           </Routes>
-        <Footer />
     </div>
     </Router>
   );

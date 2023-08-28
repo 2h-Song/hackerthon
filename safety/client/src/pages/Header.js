@@ -106,12 +106,12 @@ export default function Header() {
                 <li>
                   <button
                     onClick={openInquiryModal}
-                    className="z-auto block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                    className="z-10 block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                   >
                     문의하기
                   </button>
                   {isInquiryModalOpen && (
-                    <div className="modal fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-75">
+                    <div className="modal fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-75 overflow-y-auto z-50">
                       <div className="modal-content bg-white w-1/2 p-6 rounded-lg">
                         <a>Email : abc@gmail.com</a>
                         <br />
@@ -132,7 +132,7 @@ export default function Header() {
         </nav>
       </header>
       {isReportModalOpen && (
-        <div className="modal fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-75">
+        <div className="modal fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-75 overflow-y-auto z-50">
           <div className="modal-content bg-white w-11/12 md:w-1/2 lg:w-1/3 p-6 rounded-lg overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">긴급 상황 신고하기</h2>
             <p>긴급 상황엔 제출만 눌러도 됩니다</p>

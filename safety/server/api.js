@@ -12,4 +12,3 @@ router.get('/', (req,res)=> {
 // router.use('/main', main);
 
 module.exports = router;
-
