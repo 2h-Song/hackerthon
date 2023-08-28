@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from "axios";
 import Header from "./pages/Header";
 import Footer from "./pages/Footer";
-import Main from "./pages/Main";
+import Map from "./components/map";
 
 function App() {
 
@@ -13,7 +13,7 @@ function App() {
       <div className="App">
         <Header />
           <Routes>
-            <Route path="/" />
+            <Route path="/" element={<Map/>} />
           </Routes>
         <Footer />
     </div>
