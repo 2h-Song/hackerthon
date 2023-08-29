@@ -6,26 +6,26 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
+const schedule = require('node-schedule');
+
 
 const socketIo = require('socket.io');
 const http = require('http').createServer(app);
 
 const io = socketIo(http, {
   cors: {
-    origin: "http://localhost:3000", // 클라이언트의 주소
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     credentials: true
   }
 });
 
-
 const corsOptions = {
-  origin: 'http://localhost:3000', // 클라이언트의 주소
+  origin: 'http://localhost:3000',
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-
 
 io.on('connection', (socket) => {
   console.log('Client connected');
@@ -35,10 +35,36 @@ io.on('connection', (socket) => {
   });
 
   socket.on('newReport', (report) => {
+    const currentTimestamp = new Date();
+    
     // 데이터를 DB에 저장하는 코드
+    const { latitude, longitude, reportText } = report;
+    const query = `INSERT INTO reports (latitude, longitude, reportText, timestamp) VALUES (?, ?, ?, ?)`;
+    db.query(query, [latitude, longitude, reportText, currentTimestamp], (error, results) => {
+      if (error) {
+        console.error('Error saving data:', error);
+      } else {
+        console.log('Data saved successfully');
+        // 저장된 데이터를 모든 클라이언트에게 브로드캐스트
+        io.emit('reportUpdate', { id: results.insertId, latitude, longitude, reportText, timestamp: currentTimestamp });
+      }
+    });
+  });
+});
 
-    // 저장된 데이터를 모든 클라이언트에게 브로드캐스트
-    io.emit('reportUpdate', report);
+// 현재 시간으로부터 1초 후에 실행되는 스케줄
+const deleteJob = schedule.scheduleJob(new Date(Date.now() + 1000), () => {
+  // 3일 이상된 데이터를 삭제하는 쿼리 작성
+  const threeDaysAgo = new Date();
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+  const deleteQuery = `DELETE FROM reports WHERE timestamp <= ?`;
+  db.query(deleteQuery, [threeDaysAgo], (error, results) => {
+    if (error) {
+      console.error('Error deleting data:', error);
+    } else {
+      console.log('Old data deleted successfully');
+    }
   });
 });
 
@@ -64,7 +90,9 @@ const db = mysql.createConnection({
   user: 'root',
   password: process.env.DATABASE_PASSWORD,
   database: 'safety',
-  port: '3306'
+  port: '3306',
+  timezone:"Asia/Seoul",
+  dataStrings:true
 });
 
 // MySQL 연결
@@ -78,7 +106,7 @@ db.connect((err) => {
 
 app.post('/submit-report', (req, res) => {
   const { latitude, longitude, reportText } = req.body;
-  
+
   const query = `INSERT INTO reports (latitude, longitude, reportText) VALUES (?, ?, ?)`;
   db.query(query, [latitude, longitude, reportText], (error, results) => {
     if (error) {
