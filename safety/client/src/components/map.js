@@ -26,15 +26,26 @@ export default function Map() {
         setMap(newMap);
         displayUserMarker(newMap);
 
-        socket.on('reportUpdate', (newReport)=> {
+        socket.on('reportUpdate', (newReport) => {
           setReports(prevReports => [...prevReports, newReport]);
-        })
+          displayReportMarker(newMap, [...reports, newReport]);
+        });        
       });
       return () => {
         socket.disconnect();
       }
     });
   }, []);
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/get-reports')
+      .then((res) => {
+        setReports(res.data);
+        displayReportMarker(map, res.data); // 데이터가 로드된 후에 마커 생성 함수 호출
+      })
+      .catch((e) => console.log(e));
+  }, [map]); // map 상태가 변경될 때마다 호출되도록 설정
+  
 
   const displayUserMarker = (map) => {
     if (map && navigator.geolocation) {
@@ -106,6 +117,38 @@ export default function Map() {
     });
   };
 
+  const displayReportMarker = (map, reports) => {
+    const markerImage = new window.kakao.maps.MarkerImage(
+      'https://cdn-icons-png.flaticon.com/512/752/752755.png',
+      new window.kakao.maps.Size(50, 50),
+      {
+        offset: new window.kakao.maps.Point(20, 20),
+      }
+    );
+  
+    reports.forEach(report => {
+      const marker = new window.kakao.maps.Marker({
+        position: new window.kakao.maps.LatLng(report.latitude, report.longitude),
+      });
+      // 마커 이미지 설정
+      marker.setImage(markerImage);
+  
+      // // 인포윈도우 설정
+      // const infowindow = new window.kakao.maps.InfoWindow({
+      //   content: report.reportText,
+      // });
+  
+      // window.kakao.maps.event.addListener(marker, 'click', function () {
+      //   infowindow.open(map, marker);
+      // });
+  
+      marker.setMap(map);
+    });
+  };
+  
+
+
+
   const handleSearchPoliceStations = () => {
     if (map) {
       const currentLevel = map.getLevel(); // 현재 지도 레벨 얻기
@@ -137,14 +180,6 @@ export default function Map() {
     }
   };
 
-  useEffect(() => {
-    axios.get('http://localhost:8080/get-reports')
-      .then((res) => {
-        setReports(res.data);
-        console.log(JSON.stringify(res));
-      })
-      .catch((e) => console.log(e));
-  }, []); // 컴포넌트가 마운트 될 때 한 번만 실행되도록 설정
 
   return (
     <div className="relative flex">
@@ -158,7 +193,8 @@ export default function Map() {
           <ul>
             {reports.map((report, index) => (
               <li key={index}>
-                위도: {report.latitude}, 경도: {report.longitude}, 사건 내용: {report.reportText}
+                시간: {new Date(report.timestamp).toLocaleString()} <br/>
+                사건 내용: {report.reportText}
               </li>
             ))}
           </ul>
