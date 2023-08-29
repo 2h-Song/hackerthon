@@ -1,13 +1,22 @@
-const mysql = require("mysql");
+const mysql = require('mysql');
+const dotenv = require('dotenv');
 
-const connection = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  port: "3306",
-  password: "패스워드",
-  database: "safety",
-});
+dotenv.config();
 
-connection.connect();
+const con = mysql.createConnection(
+  {
+    host: 'localhost',
+    user: 'root',
+    password: process.env.DATABASE_PASSWORD,
+    database: 'safety',
+    port: '3306'
+  }
+);
 
-module.exports = connection;
+con.connect((err) => {
+  console.log("db init success");
+  
+})
+
+
+module.exports = con;

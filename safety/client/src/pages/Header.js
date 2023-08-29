@@ -11,6 +11,8 @@ export default function Header() {
   const [isInquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [reportText, setReportText] = useState("");
+  const [reports, setReports] = useState([]); // 받아온 데이터를 저장할 상태
+
 
   const openReportModal = () => {
     // 신고 및 제보하기
@@ -27,30 +29,39 @@ export default function Header() {
     setInquiryModalOpen(false);
   };
 
-  // const handleOptionClick = (option) => {
-  //     setSelectedOption(option);
-  //     closeModal();
-  // }
+  const getCurrentPosition = () => {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            resolve({ latitude, longitude });
+          },
+          (error) => {
+            console.error("Error getting current position:", error);
+            reject(error);
+          }
+        );
+      } else {
+        reject(new Error("Geolocation not supported"));
+      }
+    });
+  };
+  
 
-  /** 주석 처리 오후 2:51 
-    const handleComplete = () => {
-        // axios를 통해 서버로 결과값 전달
-        console.log('Selected Option :', selectedOption);
-        console.log('Report Text:', reportText);
-        closeModal();
-    }*/
 
-  // 추가한 부분 오후 2:51
   const handleComplete = async () => {
     try {
-      const response = await fetch("http://localhost:3005/submit-report", {
+      const position = await getCurrentPosition(); // 사용자의 현재 위치를 얻는 함수 (아래에 구현)
+      console.log(position);
+      const response = await fetch("http://localhost:8080/submit-report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ reportText }),
+        body: JSON.stringify({ reportText, latitude: position.latitude, longitude: position.longitude }),
       });
-
+  
       if (response.ok) {
         console.log("Report submitted successfully");
         closeModal(); // 모달 닫기 등의 동작
@@ -61,7 +72,7 @@ export default function Header() {
       console.error("Error submitting report:", error);
     }
   };
-  //
+  
 
   return (
     <div>

@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../css/main.css";
+import axios from 'axios';
+import io from 'socket.io-client';
+
+const socket = io.connect("http://localhost:8080"); // 서버의 주소로 변경
 
 export default function Map() {
   const [map, setMap] = useState(null);
+  const [reports, setReports] = useState([]); // 받아온 데이터를 저장할 상태
 
   useEffect(() => {
     const mapScript = document.createElement("script");
@@ -20,7 +25,14 @@ export default function Map() {
         const newMap = new window.kakao.maps.Map(mapContainer, mapOption);
         setMap(newMap);
         displayUserMarker(newMap);
+
+        socket.on('reportUpdate', (newReport)=> {
+          setReports(prevReports => [...prevReports, newReport]);
+        })
       });
+      return () => {
+        socket.disconnect();
+      }
     });
   }, []);
 
@@ -125,16 +137,31 @@ export default function Map() {
     }
   };
 
+  useEffect(() => {
+    axios.get('http://localhost:8080/get-reports')
+      .then((res) => {
+        setReports(res.data);
+        console.log(JSON.stringify(res));
+      })
+      .catch((e) => console.log(e));
+  }, []); // 컴포넌트가 마운트 될 때 한 번만 실행되도록 설정
 
   return (
     <div className="relative flex">
       <div id="map-container" className="w-3/4 h-screen z-10">
-      <button onClick={handleSearchPoliceStations}>주위 경찰서</button>
+        <button onClick={handleSearchPoliceStations}>주위 경찰서</button>
         <div id="map" className="w-full h-full"></div>
       </div>
       <div className="w-1/4 p-4">
         <div className="bg-gray-100 p-4 rounded-lg shadow">
-          <a>실시간 사건 신고 위치</a>
+          <div>실시간 사건 신고 위치</div>
+          <ul>
+            {reports.map((report, index) => (
+              <li key={index}>
+                위도: {report.latitude}, 경도: {report.longitude}, 사건 내용: {report.reportText}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
