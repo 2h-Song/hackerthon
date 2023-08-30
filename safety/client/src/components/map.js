@@ -12,7 +12,7 @@ export default function Map() {
   useEffect(() => {
     const mapScript = document.createElement("script");
     mapScript.async = true;
-    mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=594faadaf48a7be30529e06eb286efd9&libraries=services,clusterer,drawing&autoload=false`;
+    mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_API_KEY}&libraries=services,clusterer,drawing&autoload=false`;
     document.head.appendChild(mapScript);
 
     mapScript.addEventListener("load", () => {
@@ -133,14 +133,14 @@ export default function Map() {
       // 마커 이미지 설정
       marker.setImage(markerImage);
   
-      // // 인포윈도우 설정
-      // const infowindow = new window.kakao.maps.InfoWindow({
-      //   content: report.reportText,
-      // });
+      // 인포윈도우 설정
+      const infowindow = new window.kakao.maps.InfoWindow({
+        content: report.reportText,
+      });
   
-      // window.kakao.maps.event.addListener(marker, 'click', function () {
-      //   infowindow.open(map, marker);
-      // });
+      window.kakao.maps.event.addListener(marker, 'click', function () {
+        infowindow.open(map, marker);
+      });
   
       marker.setMap(map);
     });
@@ -184,20 +184,36 @@ export default function Map() {
   return (
     <div className="relative flex">
       <div id="map-container" className="w-3/4 h-screen z-10">
-        <button onClick={handleSearchPoliceStations}>주위 경찰서</button>
+        <button
+          onClick={handleSearchPoliceStations}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          주위 경찰서
+        </button>
         <div id="map" className="w-full h-full"></div>
       </div>
       <div className="w-1/4 p-4">
-        <div className="bg-gray-100 p-4 rounded-lg shadow">
-          <div>실시간 사건 신고 위치</div>
-          <ul>
+        <div className="map_wrap">
+          <div className="bg-gray-100 p-4 rounded-lg shadow">
+            <div className="text-center mb-4 font-bold text-blue-600 text-xl">
+              실시간 사건 신고 위치
+            </div>
             {reports.map((report, index) => (
-              <li key={index}>
-                시간: {new Date(report.timestamp).toLocaleString()} <br/>
-                사건 내용: {report.reportText}
-              </li>
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 mb-4 shadow-md border-2 border-blue-300"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <p className="font-bold text-gray-600">시간:</p>
+                  {new Date(report.timestamp).toLocaleString()}
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="font-bold text-gray-600">사건 내용:</p>
+                  <p className="text-gray-800">{report.reportText}</p>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     </div>
