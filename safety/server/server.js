@@ -52,8 +52,8 @@ io.on('connection', (socket) => {
   });
 });
 
-// 현재 시간으로부터 1초 후에 실행되는 스케줄
-const deleteJob = schedule.scheduleJob(new Date(Date.now() + 1000), () => {
+// 3일 이상된 데이터를 삭제하는 스케줄
+const deleteJob = schedule.scheduleJob('0 0 * * *', () => {
   // 3일 이상된 데이터를 삭제하는 쿼리 작성
   const threeDaysAgo = new Date();
   threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);

@@ -157,7 +157,7 @@ export default function Map() {
       const ps = new window.kakao.maps.services.Places();
   
       // 주변 경찰서를 검색하고 검색 완료 후 호출되는 콜백함수
-      ps.keywordSearch('지구대', (data, status) => {
+      ps.keywordSearch('경찰서', (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
   
