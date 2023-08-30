@@ -8,6 +8,7 @@ const socket = io.connect("http://localhost:8080"); // 서버의 주소로 변�
 export default function Map() {
   const [map, setMap] = useState(null);
   const [reports, setReports] = useState([]); // 받아온 데이터를 저장할 상태
+  const [currentInfowindow, setCurrentInfowindow] = useState(null);
 
   useEffect(() => {
     const mapScript = document.createElement("script");
@@ -95,27 +96,27 @@ export default function Map() {
       map: map,
       position: new window.kakao.maps.LatLng(place.y, place.x)
     });
-  
+
     // 인포윈도우 생성
     const infowindow = new window.kakao.maps.InfoWindow({
       zIndex: 1,
-      content: '<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>'
+      content: '<div style="text-center;padding:5px;font-size:12px;">' + place.place_name + '</div>'
     });
-  
-    // 인포윈도우 상태 추적
-    let infowindowVisible = false;
-  
+
     // 마커에 클릭 이벤트 리스너 설정
     window.kakao.maps.event.addListener(marker, 'click', function () {
-      if (infowindowVisible) {
-        infowindow.close();
-        infowindowVisible = false;
-      } else {
-        infowindow.open(map, marker);
-        infowindowVisible = true;
+      // 이미 열린 인포윈도우가 있으면 닫음
+      if (currentInfowindow) {
+        currentInfowindow.close();
       }
+
+      // 클릭한 마커에 대한 인포윈도우 열기
+      infowindow.open(map, marker);
+      setCurrentInfowindow(infowindow);
     });
   };
+  
+  
 
   const displayReportMarker = (map, reports) => {
     const markerImage = new window.kakao.maps.MarkerImage(
@@ -184,19 +185,19 @@ export default function Map() {
   return (
     <div className="relative flex">
       <div id="map-container" className="w-3/4 h-screen z-10">
+        <div id="map" className="w-full h-full"></div>
         <button
           onClick={handleSearchPoliceStations}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute top-4 left-4 z-20"
         >
           주위 경찰서
         </button>
-        <div id="map" className="w-full h-full"></div>
       </div>
       <div className="w-1/4 p-4">
         <div className="map_wrap">
           <div className="bg-gray-100 p-4 rounded-lg shadow">
             <div className="text-center mb-4 font-bold text-blue-600 text-xl">
-              실시간 사건 신고 위치
+            💡 실시간 접수 사건
             </div>
             {reports.map((report, index) => (
               <div
@@ -204,11 +205,11 @@ export default function Map() {
                 className="bg-white rounded-lg p-4 mb-4 shadow-md border-2 border-blue-300"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <p className="font-bold text-gray-600">시간:</p>
+                  <p className="font-bold text-gray-600">⏰ 시간:</p>
                   {new Date(report.timestamp).toLocaleString()}
                 </div>
                 <div className="flex justify-between items-center">
-                  <p className="font-bold text-gray-600">사건 내용:</p>
+                  <p className="font-bold text-gray-600">📜 사건 내용:</p>
                   <p className="text-gray-800">{report.reportText}</p>
                 </div>
               </div>

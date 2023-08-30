@@ -88,7 +88,7 @@ export default function Header() {
             <div className="flex items-center lg:order-2">
               <button
                 onClick={openReportModal}
-                className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-lg px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
               >
                 신고 및 제보하기
               </button>
@@ -98,22 +98,22 @@ export default function Header() {
               id="mobile-menu-2"
             >
               <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                {/* <li>
+                <li>
                   <a
-                    href="#"
+                    href="https://minwon.police.go.kr/#requestMinwon/report/STT-102"
                     className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                   >
-                    지도
+                    강력범죄 신고
                   </a>
-                </li> */}
-                {/* <li>
+                </li>
+                <li>
                   <a
-                    href="/admin"
+                    href="https://www.safetyreport.go.kr/#safereport/safereport"
                     className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                   >
-                    관리자
+                    민원 신고
                   </a>
-                </li> */}
+                </li>
                 <li>
                   <button
                     onClick={openInquiryModal}
@@ -124,7 +124,7 @@ export default function Header() {
                   {isInquiryModalOpen && (
                     <div className="modal fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-75 overflow-y-auto z-50">
                       <div className="modal-content bg-white w-1/2 p-6 rounded-lg">
-                        <a>Email : abc@gmail.com</a>
+                        <a href="https://gmail.com">Email : ssongh2h@gmail.com</a>
                         <br />
                         <a>유선 연락처 : 010-1234-5678</a>
                         <button
